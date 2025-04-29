@@ -6,6 +6,7 @@ import '../../../core/resorces/Assets_Image_Manager.dart';
 import '../../../core/resorces/Colors_Manager.dart';
 import '../../../core/resorces/Fonts_Manager.dart';
 import '../../../core/resorces/Strings_Value_Manager.dart';
+import '../../../services/local_storage_service.dart';
 
 
 class LoginSginupOnbording extends StatelessWidget {
@@ -57,7 +58,8 @@ class LoginSginupOnbording extends StatelessWidget {
                         ),
                         padding:  EdgeInsets.symmetric(
                             vertical: screenHeight*0.017 )),
-                    onPressed: () {
+                    onPressed: () async {
+                      await LocalStorageService.setSeenOnboarding(); // ✅ نحفظ
                       Navigator.pushNamed(context, "LoginWithEmailScreenScreen");
                     },
                     child:  Text(
@@ -74,8 +76,9 @@ class LoginSginupOnbording extends StatelessWidget {
                         ),
                         padding: EdgeInsets.symmetric( vertical: screenHeight*0.019 )
                     ),
-                    onPressed: () {
-                       Navigator.pushNamed(context, "CardChooseUserType");
+                    onPressed: () async {
+                      await LocalStorageService.setSeenOnboarding(); // ✅ نحفظ
+                      Navigator.pushNamed(context, "CardChooseUserType");
                     },
                     child:  Text(StringsManager.rigister , style: TextStyle(fontWeight: FontWeight.bold,  fontFamily:FontsManager.GEDinkum , fontSize: screenWidth * 0.035, color: ColorsManager.black),)),
               ),

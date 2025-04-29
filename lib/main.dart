@@ -3,7 +3,8 @@ import 'package:tamkin/services/providers/Auth_Provider.dart';
 import 'app/My_App.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(
     MultiProvider(
       providers: [

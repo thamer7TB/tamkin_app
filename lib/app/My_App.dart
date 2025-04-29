@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../core/resorces/Routes_Manager.dart';
 import '../presentaions/pages/Splash_Screen.dart';
+import '../presentaions/pages/redirector_screen.dart';
 
 
 class MyApp extends StatelessWidget {
@@ -11,7 +12,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false ,
 
-      initialRoute: "ProfileStartScreen" ,
+    //  home: const RedirectorScreen(),
+      initialRoute:  "TraineeHome",
       routes: RoutesManager.routs,
 
     );
