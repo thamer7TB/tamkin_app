@@ -142,3 +142,135 @@ const List<String> skills = [
   "Project Management",
   "Other"
 ];
+
+// 1. COMPANY/EMPLOYER FIELDS مجالات عمل الشركة 😎🔽🔽
+const List<String> industryList = [
+  'Technology',
+  'Healthcare',
+  'Finance',
+  'Education',
+  'Manufacturing',
+  'Retail',
+  'Construction',
+  'Hospitality',
+  'Transportation',
+  'Energy',
+  'Telecommunications',
+  'Agriculture',
+  'Media & Entertainment',
+  'Government',
+  'Non-Profit',
+  'Other'
+];
+
+//حجم الشركة 🔽🔽🔽
+
+const List<String> companySizeList = [
+  '1-10 employees',
+  '11-50 employees',
+  '51-200 employees',
+  '201-500 employees',
+  '501-1000 employees',
+  '1001+ employees'
+];
+
+// 2. TRAINING CENTER/INSTITUTION FIELDS   نوع المركز التكويني
+const List<String> institutionTypeList = [
+  'Government',
+  'Private',
+  'Non-Profit',
+  'University',
+  'Vocational',
+  'Online Platform'
+];
+
+// المجالات التي يقدمون فيها تكوينات
+
+const List<String> specializationsList = [
+  'IT & Software',
+  'Business Management',
+  'Healthcare',
+  'Engineering',
+  'Design & Creative',
+  'Language Training',
+  'Vocational Skills',
+  'Safety Training',
+  'Teacher Training',
+  'Leadership Development',
+  'Digital Marketing',
+  'Data Science',
+  'Artificial Intelligence',
+  'Renewable Energy',
+  'Hospitality Management'
+];
+
+// 3. TRAINER/COURSE PROVIDER FIELDS المجالاتي التي يغطيها المدرب | عارض التكوين
+const List<String> expertiseAreasList = [
+  'Programming',
+  'Graphic Design',
+  'Digital Marketing',
+  'Project Management',
+  'Data Analysis',
+  'Cybersecurity',
+  'Cloud Computing',
+  'Artificial Intelligence',
+  'Machine Learning',
+  'Web Development',
+  'Mobile Development',
+  'UI/UX Design',
+  'Business Strategy',
+  'Financial Analysis',
+  'Language Instruction',
+  'Soft Skills Training',
+  'Technical Writing',
+  'Quality Assurance',
+  'DevOps',
+  'Blockchain'
+];
+
+// اللقب المهني او الرتية
+
+const List<String> professionalTitlesList = [
+  'Dr.',
+  'Eng.',
+  'Prof.',
+  'Mr.',
+  'Mrs.',
+  'Ms.',
+  'Trainer',
+  'Coach',
+  'Consultant',
+  'Specialist'
+];
+
+// For multi-select fields, you can use these with CheckboxListTile or MultiSelectDropdown
+const Map<String, List<String>> multiSelectOptions = {
+  'specializations': specializationsList,
+  'expertiseAreas': expertiseAreasList
+};
+
+
+const List<String> experienceLevels = [
+  '1-3 years', '3-5 years', '5-10 years', '10+ years'
+];
+
+List<Map<String, dynamic>> courses = [
+  {
+    'courseTitle': 'Web Development Bootcamp',
+    'centerName': 'Algerian Tech Center',
+    'wilaya': 'Algiers',
+    'domain': 'Technology',
+    'startDate': '1 May 2025',
+    'description': 'An intensive web dev training program...',
+    'logoUrl': 'https://example.com/logo.png',
+  },
+  {
+    'courseTitle': 'Graphic Design Fundamentals',
+    'centerName': 'Design Academy DZ',
+    'wilaya': 'Oran',
+    'domain': 'Design',
+    'startDate': '10 May 2025',
+    'description': 'Learn the basics of graphic design...',
+    'logoUrl': 'https://example.com/logo2.png',
+  },
+];

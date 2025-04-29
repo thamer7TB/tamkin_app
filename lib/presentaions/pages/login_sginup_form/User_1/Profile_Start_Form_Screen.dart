@@ -5,9 +5,11 @@ import 'package:intl/intl.dart';
 import 'package:tamkin/core/resorces/Colors_Manager.dart';
 import 'package:tamkin/core/resorces/Fonts_Manager.dart';
 import '../../../../models/System_Data.dart';
-import '../../../../models/profile_model.dart';
-import '../../../../services/profile_service.dart';
+import '../../../../models/User_1/profile_model.dart';
+import '../../../../services/User_1/profile_service.dart';
+import '../../../../services/local_storage_service.dart';
 import '../../../widgets/File_Upload_widget.dart';
+import '../../../widgets/Profile_Picture_Widjet.dart';
 
 
 class ProfileScreen extends StatefulWidget {
@@ -16,35 +18,50 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-
-    Future<void> _submitForm() async {
-    // التحقق من صحة البيانات قبل الإرسال
-    if (_profile.firstName.isEmpty || _profile.lastName.isEmpty) {
+        // _submitfor ستنتقل الى الصفحة الرئيسسة ادا كل شيء تمام
+  Future<void> _submitForm() async {
+    if (_profile.firstName.isEmpty ||
+        _profile.lastName.isEmpty ||
+        _profile.dateOfBirth == null ||
+        _profile.wilaya == null ||
+        _profile.commune.isEmpty ||
+        _profile.street.isEmpty ||
+        _profile.educationLevel == null ||
+        _profile.interests.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please fill all required fields')),
+        SnackBar(
+          content: Text('Please complete all required fields.'),
+          backgroundColor: Colors.red,
+        ),
       );
       return;
     }
 
     try {
-      // عرض مؤشر تحميل
       showDialog(
         context: context,
         barrierDismissible: false,
         builder: (context) => Center(child: CircularProgressIndicator()),
       );
 
-      // إرسال البيانات عبر الخدمة
-      final success = await _service.submitProfile(_profile);
+      final result = await _service.submitProfile(_profile);
 
-      // إغلاق مؤشر التحمل
-      Navigator.of(context).pop();
+      Navigator.of(context).pop(); // إغلاق التحميل
 
-      if (success) {
+      if (result != null) {
+        // 👇 حفظ البيانات محليًا
+        await LocalStorageService.saveLoginData(
+          userType: "trainee",
+          email: "test@example.com", // ❗استبدلها لاحقًا بالبيانات الفعلية
+          token: "generated_token", // ❗استبدلها لاحقًا من API
+          lastName: _profile.lastName,
+          userId: result['id'].toString(), // حسب الـ API
+          profileImage: _profile.profilePicture,
+        );
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Profile saved successfully!')),
         );
-        // الانتقال إلى الشاشة التالية بعد الحفظ
         Navigator.pushReplacementNamed(context, '/home');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -58,6 +75,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       );
     }
   }
+
+
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -376,7 +395,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               selected: _profile.interests.contains(interest),
               selectedColor: Colors.blue, // لون الخلفية عند التحديد
               checkmarkColor: Colors.white, // لون علامة ✓
-              backgroundColor: Colors.grey[50],
+              backgroundColor: Colors.grey[10],
               onSelected: (selected) => setState(() {
                 print('--- قبل setState ---');
                 if (selected) {
@@ -401,9 +420,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     : Colors.black87, // لون النص إذا كان غير محدد
               ),),
               selected: _profile.skills.contains(skill),
-              selectedColor: Colors.blue[300], // لون الخلفية عند التحديد
+              selectedColor: Colors.blue, // لون الخلفية عند التحديد
               checkmarkColor: Colors.white, // لون علامة ✓
-              backgroundColor: Colors.grey[50],
+              backgroundColor: Colors.grey[10],
               onSelected: (selected) => setState(() {
                 if (selected) {
                   _profile.skills.add(skill);
@@ -422,8 +441,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     return Container(
-      margin: EdgeInsets.all(screenHeight*0.015),
-      padding: EdgeInsets.symmetric( horizontal:  screenWidth*0.001 ,vertical: screenHeight*0.06 ),
+      margin: EdgeInsets.symmetric(horizontal:  screenHeight*0.015),
+      padding: EdgeInsets.symmetric( horizontal:  screenWidth*0.001 ),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey),
         borderRadius: BorderRadius.circular(16),
@@ -440,23 +459,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   style: TextStyle(fontSize: screenWidth*0.06 , fontWeight: FontWeight.bold)),
             ),
             SizedBox(height: screenHeight*0.02),
-            Text('Profile Picture (optional)', style: TextStyle( fontSize: screenWidth*0.04,fontWeight: FontWeight.w500)),
-            //SizedBox(height: screenHeight*0.01),
+            Text('Profile Picture (optional)', style: TextStyle( fontSize: screenWidth*0.037,fontWeight: FontWeight.w500)),
+            SizedBox(height: screenHeight*0.01),
             //_buildFileUpload('profile', _profile.profilePicture),
-            FileUploadWidget(
-              filePath: _profile.profilePicture,
-              fileType: 'profile',
-              onFileSelected: (filePath) async {
-                final uploadedUrl = await _service.uploadFile(filePath, 'profile');
-                if (uploadedUrl != null) {
-                  setState(() => _profile.profilePicture = uploadedUrl);
-                }
-              },
-              onFileRemoved: () {
-                setState(() => _profile.profilePicture = null);
-              },
+            Align(
+              alignment: Alignment.center,
+              child: ProfilePicturePicker(
+                imageUrl: _profile.profilePicture,
+                onImageUploaded: (uploadedUrl) {
+                  setState(() {
+                    _profile.profilePicture = uploadedUrl;
+                  });
+                },
+              ),
             ),
-            //SizedBox(height: screenHeight*0.03),
+
+            SizedBox(height: screenHeight*0.01),
             Text('Upload CV (optional)', style: TextStyle( fontSize: screenWidth*0.035,fontWeight: FontWeight.w500)),
             //SizedBox(height: screenHeight*0.01),
             //_buildFileUpload('cv', _profile.cv),
@@ -479,7 +497,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               filePath: _profile.diploma,
               fileType: 'diploma',
               onFileSelected: (filePath) async {
-                final uploadedUrl = await _service.uploadFile(filePath, 'profile');
+                final uploadedUrl = await _service.uploadFile(filePath, 'diploma');
                 if (uploadedUrl != null) {
                   setState(() => _profile.diploma = uploadedUrl);
                 }

@@ -142,7 +142,9 @@ class LoginWithEmailScreenScreen extends StatelessWidget {
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context , "ForgetPasswordScreen1");
+                  },
                   child: Text(
                     StringsManager.loginForgetPassword,
                     style: TextStyle(

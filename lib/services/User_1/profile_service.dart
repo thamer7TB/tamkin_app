@@ -1,12 +1,12 @@
 // lib/services/profile_service.dart
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../models/User_1/profile_model.dart';
+import '../../models/User_1/profile_model.dart';
 
 class ProfileService {
   static const String _baseUrl = 'https://your-api.com/api';
 
-  Future<bool> submitProfile(ProfileModel profile) async {
+  Future<Map<String, dynamic>?> submitProfile(ProfileModel profile) async {
     try {
       final response = await http.post(
         Uri.parse('$_baseUrl/profiles'),
@@ -14,11 +14,15 @@ class ProfileService {
         body: json.encode(profile.toJson()),
       );
 
-      return response.statusCode == 200;
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return json.decode(response.body);
+      }
+      return null;
     } catch (e) {
       throw Exception('Failed to submit profile: $e');
     }
   }
+
 
   Future<String?> uploadFile(String filePath, String fileType) async {
     try {

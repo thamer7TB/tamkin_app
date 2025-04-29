@@ -11,6 +11,8 @@ class ColorsManager{
   static const Color black = Colors.black;
   static Color?  gray  = Color(0xff808283) ;
   static Color?  grayLow  = Color(0xffC7C7C7) ;
+  static const Color  grayLow2  = Color(0xffEBEBEB) ;
+  static const Color  UserGrayScaffold  = Color(0xFFF2F2F2) ;
 
   // static Color? iconSocialMedia = Colors.grey[300] ;
 

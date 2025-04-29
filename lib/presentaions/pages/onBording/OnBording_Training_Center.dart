@@ -7,6 +7,8 @@ import 'package:tamkin/core/resorces/Fonts_Manager.dart';
 import 'package:tamkin/core/resorces/Size_Value_Manager.dart';
 import 'package:tamkin/core/resorces/Strings_Value_Manager.dart';
 
+import '../../../services/local_storage_service.dart';
+
 class OnBordingCenter extends StatelessWidget {
   final PageController controller;
   const OnBordingCenter({super.key, required this.controller});
@@ -94,15 +96,16 @@ class OnBordingCenter extends StatelessWidget {
                               backgroundColor: MaterialStateProperty.all(ColorsManager.primaryColor),
                               shape: MaterialStateProperty.all(const CircleBorder()),
                             ),
-                            onPressed: () {
+                            onPressed: () async {
                               if ( controller.page!.round() < 2) {
                                 controller.nextPage(
                                   duration: const Duration(milliseconds: 500),
                                   curve: Curves.ease,
                                 );
                               } else {
+                                await LocalStorageService.setSeenOnboarding();// الانتقال للصفحة التالية
                                 Navigator.pushNamed(context , "LoginSginupOnbording");
-                              }// الانتقال للصفحة التالية
+                              }
                             },
                             icon: Icon(
                               Icons.arrow_forward,

@@ -4,7 +4,7 @@ import 'package:file_picker/file_picker.dart';
 class FileUploadWidget extends StatefulWidget {
   final String? filePath;
   final String fileType;
-  final ValueChanged<String> onFileSelected;
+  final Future<void> Function(String filePath) onFileSelected;
   final VoidCallback onFileRemoved;
 
   const FileUploadWidget({
@@ -34,7 +34,7 @@ class _FileUploadWidgetState extends State<FileUploadWidget> {
       setState(() => _isUploading = true); // <-- بعد التأكد فقط
       final filePath = result.files.single.path;
       if (filePath != null) {
-         widget.onFileSelected(filePath);
+        await widget.onFileSelected(filePath);
       }
     }
 
