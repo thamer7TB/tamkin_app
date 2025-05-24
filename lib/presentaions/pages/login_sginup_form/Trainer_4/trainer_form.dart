@@ -1,5 +1,4 @@
 
-
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:intl/intl.dart';
@@ -13,7 +12,6 @@ import '../../../../models/Trainer_4/Trainer_Model.dart';
 import '../../../../services/Trainer_4/Trainer_Services.dart';
 import '../../../widgets/File_Upload_widget.dart';
 import '../../../widgets/Profile_Picture_Widjet.dart';
-
 
 class TrainerFormScreen extends StatefulWidget {
   @override
@@ -394,9 +392,10 @@ class _TrainerFormScreenState extends State<TrainerFormScreen> {
             alignment: Alignment.center,
             child: ProfilePicturePicker(
               imageUrl: _trainer.profilePicture,
-              onImageUploaded: (uploadedUrl) {
+              onImagePicked: (filePath) {
                 setState(() {
-                  _trainer.profilePicture = uploadedUrl;
+                  _trainer.profilePicture = filePath;
+                  print('📸 Profile picture selected: $filePath');
                 });
               },
             ),
@@ -408,11 +407,11 @@ class _TrainerFormScreenState extends State<TrainerFormScreen> {
           FileUploadWidget(
             filePath: _trainer.cv,
             fileType: 'cv',
-            onFileSelected: (filePath) async {
-              final uploadedUrl = await _service.uploadFile(filePath, 'CV');
-              if (uploadedUrl != null) {
-                setState(() => _trainer.cv = uploadedUrl);
-              }
+            onFileSelected: (filePath) {
+              setState(() {
+                _trainer.cv = filePath;
+                print('📄 CV selected: $filePath');
+              });
             },
             onFileRemoved: () => setState(() => _trainer.cv = null),
           ),
@@ -423,11 +422,11 @@ class _TrainerFormScreenState extends State<TrainerFormScreen> {
           FileUploadWidget(
             filePath: _trainer.diploma,
             fileType: 'diploma',
-            onFileSelected: (filePath) async {
-              final uploadedUrl = await _service.uploadFile(filePath, 'diploma');
-              if (uploadedUrl != null) {
-                setState(() => _trainer.diploma = uploadedUrl);
-              }
+            onFileSelected: (filePath) {
+              setState(() {
+                _trainer.diploma = filePath;
+                print('📜 Diploma selected: $filePath');
+              });
             },
             onFileRemoved: () => setState(() => _trainer.diploma = null),
           ),

@@ -29,7 +29,7 @@ class _WhoAreYouScreenState extends State<WhoAreYouScreen> {
       'title': 'Training Center/Institution',
       'description': 'We provide structured training programs and seek suitable candidates.',
       'icon': Icons.business_center_rounded,
-      'route': "CenterSignupScreen",
+      'route': "TrainingCenterSignupScreen",
     },
     4: {
       'title': 'Trainer/Course Provider',

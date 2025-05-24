@@ -14,7 +14,7 @@ class CoursesHorizontalList extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return SizedBox(
-     //  height: screenWidth * 0.75,
+      height: screenWidth * 0.75,
       child: FutureBuilder<List<CourseOpportunityModel>>(
         future: _service.fetchCourseOpportunities(),
         builder: (context, snapshot) {
@@ -28,13 +28,16 @@ class CoursesHorizontalList extends StatelessWidget {
 
           return ListView.builder(
             scrollDirection: Axis.horizontal,
-            padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.03),
+            padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.01),
             itemCount: courses.length,
             itemBuilder: (context, index) {
               final course = courses[index];
               return Padding(
-                padding: EdgeInsets.only(right: screenWidth * 0.03),
-                child: CourseOpportunityCard(course: course),
+                padding: EdgeInsets.only(right: screenWidth * 0.01),
+                child: SizedBox(
+                  width: screenWidth * 0.65, // إضافة العرض الثابت هنا
+                  child: CourseOpportunityCard(course: course),
+                ),
               );
             },
           );
@@ -43,4 +46,3 @@ class CoursesHorizontalList extends StatelessWidget {
     );
   }
 }
-

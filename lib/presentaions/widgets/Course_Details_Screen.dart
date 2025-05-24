@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../core/resorces/Colors_Manager.dart';
@@ -18,32 +17,202 @@ class CourseDetailsScreen extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Course Details', style: TextStyle(fontSize: screenWidth * 0.05)),
-        centerTitle: true,
-      ),
+      backgroundColor: ColorsManager.UserGrayScaffold,
+      appBar: _buildAppBar(context),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(screenWidth * 0.05),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // معلومات المركز + التنقل للبروفايل
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => CenterProfileScreen(centerId: course.centerId),
+            // 1. Center Profile Card
+            _buildCenterProfileCard(context),
+
+            // 2. Course Details Section
+            _buildSection(
+              context: context,
+              title: 'Course Details',
+              icon: Icons.info_outline,
+              items: [
+                _buildDetailItem(
+                  context: context,
+                  icon: Icons.location_on,
+                  title: 'Location',
+                  value: course.wilaya,
+                ),
+                _buildDetailItem(
+                  context: context,
+                  icon: Icons.calendar_today_rounded,
+                  title: 'Start Date',
+                  value: course.startDate,
+                ),
+                _buildDetailItem(
+                  context: context,
+                  icon: Icons.category,
+                  title: 'Domain',
+                  value: course.domain,
+                ),
+              ],
+            ),
+
+            // 3. Description Section
+            _buildSection(
+              context: context,
+              title: 'Description',
+              icon: Icons.description_outlined,
+              items: [
+                Padding(
+                  padding: EdgeInsets.all(screenWidth * 0.04),
+                  child: Text(
+                    course.description ?? 'No description provided.',
+                    style: TextStyle(
+                      fontSize: screenWidth * 0.04,
+                      height: 1.5,
+                      color: Colors.grey[700],
+                    ),
+                    textAlign: TextAlign.justify,
                   ),
-                );
-              },
-              child: Row(
+                ),
+              ],
+            ),
+
+            // 4. Apply Button
+            Padding(
+              padding: EdgeInsets.all(screenWidth * 0.04),
+              child: CustomButton(
+                buttonText: 'Apply Now',
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Application feature coming soon')),
+                  );
+                },
+              ),
+            ),
+            SizedBox(height: screenHeight * 0.04),
+          ],
+        ),
+      ),
+    );
+  }
+
+  AppBar _buildAppBar(BuildContext context) {
+    return AppBar(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.horizontal(
+          right: Radius.circular(10),
+          left: Radius.circular(10),
+        ),
+      ),
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back, color: ColorsManager.primaryColor),
+        onPressed: () => Navigator.pop(context),
+      ),
+      title: Text(
+        'Course Details',
+        style: TextStyle(
+          color: ColorsManager.primaryColor,
+          fontWeight: FontWeight.bold,
+          fontFamily: FontsManager.GEDinkum,
+          fontSize: MediaQuery.of(context).size.width * 0.05,
+        ),
+      ),
+      centerTitle: true,
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.share_outlined, color: ColorsManager.primaryColor),
+          onPressed: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Share feature coming soon')),
+            );
+          },
+        ),
+      ],
+      backgroundColor: Colors.white,
+      elevation: 0,
+    );
+  }
+
+  Widget _buildCenterProfileCard(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => CenterProfileScreen(centerId: course.centerId),
+          ),
+        );
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(content: Text('Navigating to ${course.centerName} profile')),
+        // );
+      },
+      child: Container(
+        margin: EdgeInsets.symmetric(
+          horizontal: screenWidth * 0.04,
+          vertical: screenHeight * 0.013,
+        ),
+        padding: EdgeInsets.all(screenWidth * 0.04),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(screenWidth * 0.03),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.1),
+              spreadRadius: 1,
+              blurRadius: screenWidth * 0.01,
+              offset: Offset(0, screenHeight * 0.005),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: ColorsManager.primaryColor,
+                  width: 2,
+                ),
+              ),
+              child: CircleAvatar(
+                radius: screenWidth * 0.06,
+                backgroundColor: Colors.grey[200],
+                child: course.logoUrl != null && course.logoUrl!.isNotEmpty
+                    ? ClipOval(
+                  child: Image.network(
+                    course.logoUrl!,
+                    fit: BoxFit.cover,
+                    width: screenWidth * 0.12,
+                    height: screenWidth * 0.12,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return const Center(child: CircularProgressIndicator());
+                    },
+                    errorBuilder: (context, error, stackTrace) {
+                      print('Failed to load image: ${course.logoUrl}, error: $error');
+                      return Image.asset(
+                        'assets/images/center_placeholder.png',
+                        fit: BoxFit.cover,
+                        width: screenWidth * 0.12,
+                        height: screenWidth * 0.12,
+                      );
+                    },
+                  ),
+                )
+                    : Image.asset(
+                  'assets/images/center_placeholder.png',
+                  fit: BoxFit.cover,
+                  width: screenWidth * 0.12,
+                  height: screenWidth * 0.12,
+                ),
+              ),
+            ),
+            SizedBox(width: screenWidth * 0.04),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CircleAvatar(
-                    radius: 24,
-                    backgroundImage: NetworkImage(course.logoUrl ?? 'https://via.placeholder.com/150'),
-                  ),
-                  const SizedBox(width: 10),
                   Text(
                     course.centerName,
                     style: TextStyle(
@@ -53,69 +222,119 @@ class CourseDetailsScreen extends StatelessWidget {
                       color: ColorsManager.primaryColor,
                     ),
                   ),
+                  SizedBox(height: screenHeight * 0.005),
+                  Text(
+                    course.wilaya,
+                    style: TextStyle(
+                      fontSize: screenWidth * 0.04,
+                      color: Colors.grey[600],
+                    ),
+                  ),
                 ],
               ),
             ),
-
-            const SizedBox(height: 10),
-            Text(
-              course.centerName,
-              style: TextStyle(fontSize: screenWidth * 0.045, color: Colors.grey[600]),
+            Icon(
+              Icons.chevron_right,
+              color: ColorsManager.primaryColor,
+              size: screenWidth * 0.06,
             ),
-            Divider(height: screenHeight * 0.04, color: Colors.grey[400]),
-
-            _buildDetailRow(context, Icons.location_on, ' Location', course.wilaya),
-            const SizedBox(height: 8),
-            _buildDetailRow(context, Icons.calendar_today_rounded, ' Start Date', course.startDate),
-            const SizedBox(height: 8),
-            _buildDetailRow(context, Icons.category, ' Domain', course.domain),
-            const SizedBox(height: 8),
-            Divider(height: screenHeight * 0.04),
-
-            // وصف التكوين
-            Text(
-              'Description',
-              style: TextStyle(fontSize: screenWidth * 0.05, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              course.description ?? "No description provided.",
-              style: TextStyle(fontSize: screenWidth * 0.04, color: Colors.grey[700]),
-            ),
-            const SizedBox(height: 32),
-
-            // زر التقديم
-            CustomButton(
-              buttonText: 'Apply Now',
-              onPressed: () {
-                // TODO: تنفيذ التقديم
-              },
-            ),
-            const SizedBox(height: 40),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildDetailRow(BuildContext context, IconData icon, String title, String value) {
+  Widget _buildSection({
+    required BuildContext context,
+    required String title,
+    required IconData icon,
+    required List<Widget> items,
+  }) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    return Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: screenWidth * 0.04,
+        vertical: screenHeight * 0.013,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(screenWidth * 0.03),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: screenWidth * 0.01,
+            offset: Offset(0, screenHeight * 0.005),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.all(screenWidth * 0.04),
+            child: Row(
+              children: [
+                Icon(
+                  icon,
+                  size: screenWidth * 0.065,
+                  color: ColorsManager.gray,
+                ),
+                SizedBox(width: screenWidth * 0.04),
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: screenWidth * 0.045,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: FontsManager.GEDinkum,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          ...items,
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDetailItem({
+    required BuildContext context,
+    required IconData icon,
+    required String title,
+    required String value,
+  }) {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: screenWidth * 0.01),
+      padding: EdgeInsets.symmetric(
+        horizontal: screenWidth * 0.04,
+        vertical: screenWidth * 0.03,
+      ),
       child: Row(
         children: [
-          Icon(icon, size: screenWidth * 0.06, color: ColorsManager.primaryColor),
-          SizedBox(width: screenWidth * 0.02),
+          Icon(
+            icon,
+            size: screenWidth * 0.055,
+            color: ColorsManager.primaryColor,
+          ),
+          SizedBox(width: screenWidth * 0.04),
           Text(
             title,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: screenWidth * 0.042),
+            style: TextStyle(
+              fontSize: screenWidth * 0.038,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           SizedBox(width: screenWidth * 0.04),
           Expanded(
             child: Text(
               value,
-              style: TextStyle(fontSize: screenWidth * 0.04, color: Colors.grey[700]),
+              style: TextStyle(
+                fontSize: screenWidth * 0.038,
+                color: Colors.grey[700],
+              ),
             ),
           ),
         ],
@@ -123,5 +342,3 @@ class CourseDetailsScreen extends StatelessWidget {
     );
   }
 }
-
-

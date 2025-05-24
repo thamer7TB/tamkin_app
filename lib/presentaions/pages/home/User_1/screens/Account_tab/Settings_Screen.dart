@@ -1,9 +1,8 @@
-
 import 'package:flutter/material.dart';
-
+import 'package:http/http.dart' as http;
 import '../../../../../../core/resorces/Colors_Manager.dart';
 import '../../../../../../core/resorces/Fonts_Manager.dart';
-
+import '../../../../../../services/local_storage_service.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -210,7 +209,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  void _confirmAccountDeletion(BuildContext context) {
+  Future<void> _confirmAccountDeletion(BuildContext context) async {
+    final userData = await LocalStorageService.getLoginData();
+    if (userData == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('User data not found. Please log in again.')),
+      );
+      return;
+    }
+
+    final token = userData['token'];
+    final userId = userData['userId'];
+
     showDialog(
       context: context,
       builder: (ctx) {
@@ -227,15 +237,70 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 'Delete',
                 style: TextStyle(color: Colors.red),
               ),
-              onPressed: () {
-                // TODO: Implement account deletion
+              onPressed: () async {
                 Navigator.pop(ctx);
-                Navigator.pop(context);
+                await _deleteAccount(context, token, userId);
               },
             ),
           ],
         );
       },
     );
+  }
+
+  Future<void> _deleteAccount(BuildContext context, String? token, String? userId) async {
+    if (token == null || userId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Invalid token or user ID.')),
+      );
+      return;
+    }
+
+    print('Deleting account with userId: $userId, token: $token');
+
+    try {
+      final response = await http.delete(
+        Uri.parse('https://tamkeens.up.railway.app/users/$userId'),
+        headers: {
+          'Authorization': '$token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      print('Delete Response - Status: ${response.statusCode}, Body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        // حذف البيانات من LocalStorageService
+        await LocalStorageService.clearLoginData();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Account deleted successfully.')),
+        );
+        // التوجيه إلى صفحة تسجيل الدخول أو الصفحة الرئيسية
+        Navigator.pushNamedAndRemoveUntil(context, "LoginWithEmailScreenScreen", (route) => false);
+      } else if (response.statusCode == 401) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Invalid token. Please log in again.')),
+        );
+        // التوجيه إلى صفحة تسجيل الدخول
+        Navigator.pushNamedAndRemoveUntil(context, "LoginWithEmailScreenScreen", (route) => false);
+      } else if (response.statusCode == 404) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Account not found.')),
+        );
+      } else if (response.statusCode == 500) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Server error. Please try again later.')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to delete account. Please try again.')),
+        );
+      }
+    } catch (e) {
+      print('Error deleting account: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('An error occurred: $e')),
+      );
+    }
   }
 }

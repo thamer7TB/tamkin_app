@@ -10,6 +10,7 @@ import '../../../widgets/Custom_Button.dart';
 import '../../../widgets/Custom_TextField.dart';
 import '../Login_With_Email_screen.dart';
 
+
 class TrainingCenterSignupScreen extends StatelessWidget {
   TrainingCenterSignupScreen({super.key});
 
@@ -64,12 +65,11 @@ class TrainingCenterSignupScreen extends StatelessWidget {
                         fontFamily: FontsManager.GEDinkum, color: ColorsManager.primaryColor),
                   ),
                   SizedBox(height: screenHeight * 0.01),
-                  Text("Welcome  Training Center",
+                  Text("Welcome Training Center",
                     style: TextStyle(fontSize: screenWidth * 0.044, fontWeight: FontWeight.w700,
                         fontFamily: FontsManager.Cairo, color: ColorsManager.gray),
                   ),
                   SizedBox(height: screenHeight * 0.03),
-                    // email field
                   CustomTextField(
                     controller: emailController,
                     textInputAction: TextInputAction.next,
@@ -78,7 +78,6 @@ class TrainingCenterSignupScreen extends StatelessWidget {
                     keyboardType: TextInputType.emailAddress,
                   ),
                   SizedBox(height: screenHeight * 0.01),
-                  // Phone field
                   IntlPhoneField(
                     controller: phoneController,
                     decoration: InputDecoration(
@@ -120,9 +119,7 @@ class TrainingCenterSignupScreen extends StatelessWidget {
                       print(phone.completeNumber);
                     },
                   ),
-
                   SizedBox(height: screenHeight * 0.008),
-                  // Accreditation Number field
                   CustomTextField(
                     controller: accreditationNumberController,
                     textInputAction: TextInputAction.next,
@@ -131,7 +128,6 @@ class TrainingCenterSignupScreen extends StatelessWidget {
                     keyboardType: TextInputType.text,
                   ),
                   SizedBox(height: screenHeight * 0.008),
-                    // password field
                   CustomTextField(
                     controller: passwordController,
                     textInputAction: TextInputAction.done,
@@ -142,7 +138,6 @@ class TrainingCenterSignupScreen extends StatelessWidget {
                     onToggleVisibility: authProvider.togglePasswordVisibility,
                   ),
                   SizedBox(height: screenHeight * 0.01),
-                  // Confirm Password field
                   CustomTextField(
                     controller: confirmPasswordController,
                     textInputAction: TextInputAction.done,
@@ -152,16 +147,15 @@ class TrainingCenterSignupScreen extends StatelessWidget {
                     isPassword: true,
                     onToggleVisibility: authProvider.togglePasswordVisibility,
                   ),
-
                   SizedBox(height: screenHeight * 0.02),
-                  // sign Up field
                   Consumer<AuthProvider>(
                     builder: (context, provider, _) => Column(
                       children: [
                         CustomButton(
-                          buttonText: provider.isLoading ? "" : "Sign Up",
+                          buttonText: provider.isLoading ? "" : "Next",
                           onPressed: provider.isLoading ? null : () {
                             provider.signupCenter(
+                              context: context,
                               email: emailController.text.trim(),
                               phone: phoneController.text.trim(),
                               accreditationNumber: accreditationNumberController.text.trim(),
@@ -181,9 +175,7 @@ class TrainingCenterSignupScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-
                   SizedBox(height: screenHeight * 0.04),
-                  // Login option
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -195,7 +187,6 @@ class TrainingCenterSignupScreen extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: screenHeight * 0.02),
-                  // Social media Icons
                   Row(
                     children: [
                       Expanded(child: Divider(thickness: 1, color: ColorsManager.grayLow)),
@@ -215,7 +206,6 @@ class TrainingCenterSignupScreen extends StatelessWidget {
                       SvgPicture.asset("assets/images/icons/facebook_icon_login.svg"),
                     ],
                   ),
-
                   Spacer(flex: FlexValueManager.flexValue6),
                 ],
               ),

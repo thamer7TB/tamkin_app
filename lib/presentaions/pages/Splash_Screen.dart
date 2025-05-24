@@ -18,7 +18,7 @@ class _SplashScreenState extends State<SplashScreen> {
     // TODO: implement initState
     super.initState();
     timer = Timer(Duration(seconds: 3), () {
-      Navigator.pushReplacementNamed(context, "onbording");
+      Navigator.pushReplacementNamed(context, " /redirector ");
     },);
   }
 
@@ -33,7 +33,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold( backgroundColor: ColorsManager.primaryColor,
-      body: SafeArea (child: Center(child: Image(image: AssetImage('assets/images/logo/logo.png'), width: 80 , height: 80 , color: ColorsManager.white,))),
+      body: SafeArea (child: Center(child: Image(image: AssetImage('assets/images/icons/app_icon.png'),))),
     );
   }
 }

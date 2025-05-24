@@ -1,4 +1,3 @@
-// lib/screens/company_profile_screen.dart
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:tamkin/core/resorces/Colors_Manager.dart';
@@ -336,9 +335,10 @@ class _CompanyProfileScreenState extends State<CompanyProfileScreen> {
             alignment: Alignment.center,
             child: ProfilePicturePicker(
               imageUrl: _company.logo,
-              onImageUploaded: (uploadedUrl) {
+              onImagePicked: (filePath) {
                 setState(() {
-                  _company.logo = uploadedUrl;
+                  _company.logo = filePath;
+                  print('📸 Logo selected: $filePath');
                 });
               },
             ),

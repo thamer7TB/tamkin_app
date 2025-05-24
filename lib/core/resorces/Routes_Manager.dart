@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:tamkin/presentaions/pages/login_sginup_form/Login_With_Email_screen.dart';
 import '../../models/User_1/course_opportunity_model.dart';
 import '../../presentaions/pages/Placeholder.dart';
+import '../../presentaions/pages/Splash_Screen.dart';
+import '../../presentaions/pages/home/Center_2/Center_Navigation_Wrapper.dart';
 import '../../presentaions/pages/home/User_1/screens/Account_tab/Settings_Screen.dart';
 import '../../presentaions/pages/home/User_1/trainee_navigation_wrapper.dart';
 import '../../presentaions/pages/login_sginup_form/Center_3/Center_Form_Screen.dart';
@@ -19,6 +21,7 @@ import '../../presentaions/pages/login_sginup_form/forget password/Forget_Passwo
 import '../../presentaions/pages/onBording/Login_Sginup_Onbording.dart';
 import '../../presentaions/pages/onBording/OnBording_Company.dart';
 import '../../presentaions/pages/onBording/OnBording_Wrapper.dart';
+import '../../presentaions/pages/redirector_screen.dart';
 import '../../presentaions/widgets/Course_Details_Screen.dart';
 
 
@@ -27,6 +30,7 @@ class RoutesManager {
   static Map <String, WidgetBuilder> get routs => {
 
     "/" : ( context ) => const OnBoardingWrapper(),
+    "SplashScreen" : ( context ) => const SplashScreen(),
     "LoginSginupOnbording" : ( context ) => const LoginSginupOnbording(),
     "LoginWithEmailScreenScreen" : ( context ) =>  LoginWithEmailScreenScreen(),
     "LoginWithPhoneScreen" : ( context ) =>  LoginWithPhoneScreen(),
@@ -34,14 +38,18 @@ class RoutesManager {
     "TraineeSignupScreen" : ( context ) =>  TraineeSignupScreen(),
     "TrainingCenterSignupScreen" : ( context ) =>  TrainingCenterSignupScreen(),
     "TrainerSignupScreen" : ( context ) =>  TrainerSignupScreen(),
-    "ProfileStartScreen" : ( context ) =>  ProfileScreen(),
+    "ProfileStartScreen" : ( context ) =>  ProfileScreen(signupData: {},),
     "ForgetPasswordScreen1" : ( context ) =>  ForgetPasswordScreen1(),
     "CompanySignupScreen" : ( context ) =>  CompanySignupScreen(),
-    "CompanyFormScreen" : ( context ) =>  CompanyProfileScreen(),
-    "TrainingCenterFormScreen" : ( context ) =>  TrainingCenterFormScreen(),
-    "TrainerFormScreen" : ( context ) =>  TrainerFormScreen(),
+     "CompanyFormScreen" : ( context ) =>  CompanyProfileScreen(),
+    "TrainingCenterFormScreen" : ( context ) =>  TrainingCenterFormScreen(email: '', phone: '', password: '', accreditationNumber: '',),
+     "TrainerFormScreen" : ( context ) =>  TrainerFormScreen(),
     "TraineeHome": (context) => const TraineeNavigationWrapper(),
+    " /redirector " : (context) => const RedirectorScreen(),
 
+
+    // Center UI home page
+    "CenterHome": (context) => const CenterNavigationWrapper(),
     // User 1
          // ----------> Account Navigation all services
 

@@ -3,10 +3,11 @@ import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:provider/provider.dart';
 import 'package:tamkin/core/resorces/Fonts_Manager.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../../../../core/resorces/Colors_Manager.dart';
-import '../../../../core/resorces/Size_Value_Manager.dart';
-import '../../../../core/resorces/Strings_Value_Manager.dart';
-import '../../../../services/providers/Auth_Provider.dart';
+import 'package:tamkin/core/resorces/Colors_Manager.dart';
+import 'package:tamkin/core/resorces/Size_Value_Manager.dart';
+import 'package:tamkin/core/resorces/Strings_Value_Manager.dart';
+import 'package:tamkin/presentaions/pages/login_sginup_form/User_1/Profile_Start_Form_Screen.dart';
+import 'package:tamkin/services/providers/Auth_Provider.dart';
 import '../../../widgets/Custom_Button.dart';
 import '../../../widgets/Custom_TextField.dart';
 import '../Login_With_Email_screen.dart';
@@ -139,7 +140,7 @@ class TraineeSignupScreen extends StatelessWidget {
                     flagsButtonPadding: EdgeInsets.symmetric(horizontal: screenWidth * 0.025),
                     initialCountryCode: 'DZ',
                     onChanged: (phone) {
-                      print(phone.completeNumber);
+                      print('📞 Phone number entered: ${phone.completeNumber}');
                     },
                   ),
                   SizedBox(height: screenHeight * 0.008),
@@ -180,13 +181,34 @@ class TraineeSignupScreen extends StatelessWidget {
                           buttonText: authProvider.isLoading ? "" : "Sign Up",
                           onPressed: authProvider.isLoading
                               ? null
-                              : () {
-                            authProvider.signupTrainee(
+                              : () async {
+                            print('🔍 Starting signup process');
+                            // استدعاء signupTrainee للتحقق من البيانات
+                            await authProvider.signupTrainee(
                               email: emailController.text.trim(),
                               phone: phoneController.text.trim(),
                               password: passwordController.text.trim(),
                               confirmPassword: confirmPasswordController.text.trim(),
                             );
+
+                            // التحقق من وجود أخطاء بعد التحقق
+                            if (authProvider.errorMessage == null) {
+                              print('✅ Validation successful, navigating to ProfileScreen');
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => ProfileScreen(
+                                    signupData: {
+                                      'email': emailController.text.trim(),
+                                      'phone': phoneController.text.trim(),
+                                      'password': passwordController.text.trim(),
+                                    },
+                                  ),
+                                ),
+                              );
+                            } else {
+                              print('❌ Validation failed: ${authProvider.errorMessage}');
+                            }
                           },
                           child: authProvider.isLoading
                               ? const SizedBox(

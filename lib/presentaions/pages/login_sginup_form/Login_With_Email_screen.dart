@@ -143,7 +143,7 @@ class LoginWithEmailScreenScreen extends StatelessWidget {
                 alignment: Alignment.centerRight,
                 child: TextButton(
                   onPressed: () {
-                    Navigator.pushNamed(context , "ForgetPasswordScreen1");
+                    Navigator.pushNamed(context, "ForgetPasswordScreen1");
                   },
                   child: Text(
                     StringsManager.loginForgetPassword,
@@ -164,6 +164,7 @@ class LoginWithEmailScreenScreen extends StatelessWidget {
                           ? null
                           : () {
                         authProvider.login(
+                          context,
                           emailController.text.trim(),
                           passwordController.text.trim(),
                         );
@@ -207,7 +208,9 @@ class LoginWithEmailScreenScreen extends StatelessWidget {
                     ),
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(context, "CardChooseUserType");
+                    },
                     child: Text(
                       "Sgin up",
                       textAlign: TextAlign.center,
